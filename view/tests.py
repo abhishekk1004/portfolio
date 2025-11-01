@@ -1,3 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, render, redirect
+from .models import Project, Skill, Contact
 
-# Create your tests here.
+def Home(request):
+    porject=Project.objects.all()
+    skill=Skill.objects.all()
+    return render(request, 'index.html', {'projects':porject,'skills':skill})
+
+
