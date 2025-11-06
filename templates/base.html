@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Abhishek Kushwaha — Portfolio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="theme-dark">
+  <div id="bg-slideshow"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="{{ profile }}" alt="me" class="logo" onerror="this.style.display='none'">
+      <div>
+        <div class="brand-name">Abhishek <span class="last">Kushwaha</span></div>
+        <div class="brand-sub">Django • Python • Security • Data</div>
+      </div>
+    </div>
+
+    <nav class="navlinks">
+      <a href="{% url 'main:home' %}">Home</a>
+      <a href="{% url 'main:projects' %}">Projects</a>
+      <a href="{% url 'main:photography' %}">Photography</a>
+      <a href="{% url 'main:blog_list' %}">Blog</a>
+      <a href="{% url 'main:certificates' %}">Certificates</a>
+      <a href="{% url 'main:resume' %}">Resume</a>
+      <a href="{% url 'main:home' %}#contact-section">Contact</a>
+      <button id="themeToggle" class="theme-btn">🌙</button>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="container">
+      <div id="footer-year">©</div>
+      <div class="socials">
+        <a href="https://instagram.com/YOUR_INSTAGRAM_USERNAME" target="_blank">Instagram</a>
+        <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
+        <a href="https://facebook.com/" target="_blank">Facebook</a>
+        <a href="https://x.com/" target="_blank">X</a>
+      </div>
+    </div>
+  </footer>
+
+  {{ bg_urls|json_script:"bg-urls" }}
+  <script>const bgList = JSON.parse(document.getElementById('bg-urls').textContent || '[]');</script>
+  <script src="{% static 'js/script.js' %}"></script>
+  <script>document.getElementById('footer-year').innerText = '© ' + new Date().getFullYear() + ' Abhishek Kushwaha';</script>
+</body>
+</html>
