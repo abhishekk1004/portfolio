@@ -27,9 +27,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # serve project-level static files during development
-    try:
-        urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-    except Exception:
-        # fallback: no STATICFILES_DIRS configured
-        pass
