@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Skill, Education, Project, BlogPost, Certificate, Resume, Photo, Contact
+from .models import *
 
 admin.site.register(Skill)
 admin.site.register(Education)
@@ -9,3 +9,5 @@ admin.site.register(Certificate)
 admin.site.register(Resume)
 admin.site.register(Photo)
 admin.site.register(Contact)
+
+admin.site.register(Album)  # Register the Album model in admin

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 class Skill(models.Model):
     name = models.CharField(max_length=100)
     level = models.CharField(max_length=50, blank=True)
@@ -52,16 +53,28 @@ class Resume(models.Model):
     uploaded = models.DateTimeField(auto_now_add=True)
     def __str__(self): return self.name
 
+class Album(models.Model):
+    title = models.CharField(max_length=200)
+    cover_image = models.ImageField(upload_to='albums/')
+    
+    @property
+    def photo_count(self):
+        return self.photos.count()
+    
 class Photo(models.Model):
     title = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='photos/')
     caption = models.CharField(max_length=300, blank=True)
+    album = models.ForeignKey(Album, related_name='photos', on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     def __str__(self): return self.title or f"Photo {self.pk}"
 
 class Contact(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=200)
     email = models.EmailField()
     message = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     def __str__(self): return f"{self.name} - {self.email}"
+
+
+

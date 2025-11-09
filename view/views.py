@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
-from .models import Project, BlogPost, Certificate, Resume, Skill, Contact, Education, Photo
+from .models import Project, BlogPost, Certificate, Resume, Skill, Contact, Education, Photo, Album
 import os
+from django.contrib.auth.decorators import user_passes_test
+from .forms import ResumeForm
+from django.http import JsonResponse
 
 def home(request):
     projects = Project.objects.order_by('-created')[:6]
@@ -45,18 +48,68 @@ def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'blog_detail.html', {'post': post})
 
-def resume_view(request):
+@user_passes_test(lambda u: u.is_superuser)   # Only admin can upload
+def upload_resume(request):
+    form = ResumeForm()
+    if request.method == "POST":
+        form = ResumeForm(request.POST, request.FILES)
+        if form.is_valid():
+            Resume.objects.all().delete()  # remove old resume
+            form.save()
+    return render(request, 'resume.html', {'form': form})
+
+
+"""def resume_view(request):
     r = Resume.objects.order_by('-uploaded').first()
     return render(request, 'resume.html', {'resume': r})
+"""
 
 def certificates(request):
     certs = Certificate.objects.order_by('-id')
     return render(request, 'certificates.html', {'certs': certs})
 
+
+
 def photography(request):
     photos = Photo.objects.order_by('-created')
-    insta_username = "YOUR_INSTAGRAM_USERNAME"  # replace with your instagram username
-    return render(request, 'photography.html', {'photos': photos, 'insta_username': insta_username})
+    albums = Album.objects.all().order_by('-id')
+    insta_username = "_abhi_shek_1004" 
+
+    context = {
+        'photos': photos,
+        'albums': albums,
+        'insta_username': insta_username,
+    } 
+    return render(request, 'photography.html', context)
+
+def get_album_photos(request, album_id):
+    """AJAX endpoint to get photos from a specific album"""
+    try:
+        album = Album.objects.get(id=album_id)
+        photos = album.photos.all()
+        
+        photos_data = [{
+            'id': photo.id,
+            'title': photo.title,
+            'description': photo.description,
+            'image': photo.image.url,
+        } for photo in photos]
+        
+        return JsonResponse({
+            'success': True,
+            'photos': photos_data,
+            'album_title': album.title
+        })
+    except Album.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Album not found'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
 
 def contact_submit(request):
     if request.method == 'POST':
