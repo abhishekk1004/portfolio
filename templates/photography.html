@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Photography Gallery{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/photography.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Instagram Profile Box -->
+<div class="instagram-profile-box">
+    <div class="instagram-header">
+        <i class="fab fa-instagram"></i>
+        <span>Follow Us</span>
+    </div>
+    <a href="YOUR_INSTAGRAM_LINK_HERE" target="_blank" class="instagram-profile-link">
+        <div class="instagram-profile-content">
+            <div class="instagram-icon-large">
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div class="instagram-info">
+                <h3 class="instagram-name">Your Name</h3>
+                <p class="instagram-username">@your_username</p>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Download Success Message -->
+<div id="downloadMessage" class="download-message">
+    <i class="fas fa-check-circle"></i>
+    <span id="downloadText">Image downloaded successfully! ✨</span>
+</div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Photography Gallery</h1>
+        <p class="hero-subtitle">Capturing moments, creating memories</p>
+    </div>
+</section>
+
+<!-- Albums Section -->
+<section class="albums-section">
+    <div class="container">
+        <h2 class="section-title">Photo Albums</h2>
+        <div class="albums-container">
+            {% for album in albums %}
+            <div class="album-box" onclick="openAlbum({{ album.id }}, '{{ album.title|escapejs }}')">
+                <div class="album-box-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="album-box-info">
+                    <h3 class="album-box-title">{{ album.title }}</h3>
+                    <p class="album-box-count">
+                        <i class="fas fa-images"></i> {{ album.photo_count }} Photos
+                    </p>
+                </div>
+                <div class="album-box-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Photography Gallery Section -->
+<section class="gallery-section">
+    <div class="container">
+        <h2 class="section-title">Featured Photography</h2>
+        <div class="gallery-grid">
+            {% for photo in photos %}
+            <div class="photo-card">
+                <div class="photo-wrapper">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="photo-image">
+                    <div class="glow-effect"></div>
+                </div>
+                <div class="photo-info">
+                    <h3 class="photo-title">{{ photo.title }}</h3>
+                    <p class="photo-description">{{ photo.description|truncatewords:15 }}</p>
+                    <div class="photo-actions">
+                        <button class="preview-btn" onclick="showPreview('{{ photo.image.url }}', '{{ photo.title|escapejs }}', '{{ photo.description|escapejs }}')">
+                            <i class="fas fa-expand"></i> Preview
+                        </button>
+                        <button class="download-btn" onclick="startDownload('{{ photo.image.url }}', '{{ photo.title|escapejs }}')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="modal" onclick="closeModal('previewModal')">
+    <span class="close-modal">&times;</span>
+    <div class="modal-content-wrapper" onclick="event.stopPropagation()">
+        <div class="modal-content">
+            <img id="previewImage" src="" alt="">
+            <div class="preview-info">
+                <h2 id="previewTitle"></h2>
+                <p id="previewDescription"></p>
+                <button class="modal-download-btn" onclick="downloadPreviewImage()">
+                    <i class="fas fa-download"></i> Download Image
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Album Modal -->
+<div id="albumModal" class="modal" onclick="closeModal('albumModal')">
+    <span class="close-modal">&times;</span>
+    <div class="album-modal-content" onclick="event.stopPropagation()">
+        <h2 id="albumTitle" class="album-modal-title"></h2>
+        <div id="albumGrid" class="album-photos-grid"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/photography.js' %}"></script>
+{% endblock %}
