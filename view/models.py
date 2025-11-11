@@ -55,19 +55,38 @@ class Resume(models.Model):
 
 class Album(models.Model):
     title = models.CharField(max_length=200)
-    cover_image = models.ImageField(upload_to='albums/')
+    description = models.TextField(blank=True)
+    cover_image = models.ImageField(upload_to='albums/covers/', blank=True, null=True)
+    created = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.title
     
     @property
     def photo_count(self):
         return self.photos.count()
     
 class Photo(models.Model):
-    title = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
     image = models.ImageField(upload_to='photos/')
-    caption = models.CharField(max_length=300, blank=True)
-    album = models.ForeignKey(Album, related_name='photos', on_delete=models.CASCADE, null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    def __str__(self): return self.title or f"Photo {self.pk}"
+    album = models.ForeignKey(
+        Album, 
+        related_name='photos', 
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    created = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.title or f"Photo {self.pk}"
 
 class Contact(models.Model):
     name = models.CharField(max_length=200)
