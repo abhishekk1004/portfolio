@@ -83,7 +83,7 @@ def photography(request):
     return render(request, 'photography.html', context)
 
 def get_album_photos(request, album_id):
-    """AJAX endpoint to get photos from a specific album"""
+    
     try:
         album = Album.objects.get(id=album_id)
         photos = album.photos.all()
