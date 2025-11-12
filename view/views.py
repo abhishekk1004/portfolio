@@ -80,7 +80,7 @@ def photography(request):
         'albums': albums,
         'insta_username': insta_username,
     } 
-    return render(request, 'photography.html', context)
+    return render(request, 'photography2.html', context)
 
 def get_album_photos(request, album_id):
     
