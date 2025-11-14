@@ -43,7 +43,8 @@ class BlogPost(models.Model):
 class Certificate(models.Model):
     title = models.CharField(max_length=250)
     issuer = models.CharField(max_length=200, blank=True)
-    file = models.FileField(upload_to='certificates/')
+    image_url = models.URLField()          # Google Drive OR direct link
+    credly_link = models.URLField(blank=True, null=True)
     year = models.CharField(max_length=10, blank=True)
     def __str__(self): return self.title
 
