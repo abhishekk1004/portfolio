@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Certificates{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/certificates.css' %}">
+<script src="{% static 'js/certificates.js' %}" defer></script>
+
+<div class="certificates-hero">
+    <h1 class="hero-title">My Certificates <span class="emoji" id="emoji">😎</span></h1>
+    <p class="hero-text">A showcase of my achievements and learning journey</p>
+</div>
+
+<div class="certificates-container">
+    {% for cert in certificates %}
+    <div class="certificate-card reveal">
+        <div class="certificate-img-wrapper">
+            <img src="{{ cert.image_url }}" alt="{{ cert.title }}" class="certificate-img">
+        </div>
+
+        <div class="certificate-info">
+            <h3 class="certificate-title">{{ cert.title }}</h3>
+            <p class="certificate-issuer">{{ cert.issuer }}</p>
+            <p class="certificate-year">{{ cert.year }}</p>
+
+            <div class="certificate-actions">
+                <button class="view-btn" 
+                        data-img="{{ cert.image_url }}" 
+                        data-title="{{ cert.title }}">
+                    View
+                </button>
+
+                {% if cert.credly_link %}
+                <a href="{{ cert.credly_link }}" target="_blank" class="credly-btn">
+                    View on Credly
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="no-certificates">No certificates uploaded yet.</p>
+    {% endfor %}
+</div>
+
+<!-- Modal -->
+<div id="certificateModal" class="modal">
+    <span class="close-modal">&times;</span>
+    <img id="modalImage" class="modal-image">
+    <h2 id="modalTitle" class="modal-title"></h2>
+</div>
+
+{% endblock %}
