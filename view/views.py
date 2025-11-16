@@ -65,15 +65,16 @@ def upload_resume(request):
 """
 
 def certificates(request):
-    certs = Certificate.objects.order_by('-id')
-    return render(request, 'certificates.html', {'certs': certs})
+    certificates = Certificate.objects.all()
+    return render(request, "certificates.html", {"certificates": certificates})
+    
 
 
 
 def photography(request):
     photos = Photo.objects.order_by('-created')
     albums = Album.objects.all().order_by('-id')
-    insta_username = "_abhi_shek_1004" 
+    insta_username = "_domain.me" 
 
     context = {
         'photos': photos,
